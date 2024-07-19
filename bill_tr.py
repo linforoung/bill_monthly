@@ -15,12 +15,15 @@ def generate_uuid():
 
 # 定义匹配规则的数组，每个规则包含关键字和对应类别
 match_rules = [
-    {"keywords": ["滴滴", "火车票"], "category": "交通"},
+    {"keywords": ["滴滴","中铁网络","火车票"], "category": "交通"},
     {"keywords": ["停车"], "category": "车"},
     {"keywords": ["中国石化"], "category": "车"},
+    {"keywords": ["明哥"], "category": "车"},
+    {"keywords": ["汽车"], "category": "车"},
     {"keywords": ["电费"], "category": "水电煤费"},
     {"keywords": ["京东","拼多多","Jd Health"], "category": "网购"},
     {"keywords": ["开市客"], "category": "购物"},
+    {"keywords": ["宜得利"], "category": "购物"},
     {"keywords": ["逸刻"], "category": "餐饮"},
     {"keywords": ["餐饮店"], "category": "餐饮"},
     {"keywords": ["顾村煎饼"], "category": "餐饮"},
@@ -31,16 +34,26 @@ match_rules = [
     {"keywords": ["馬記永"], "category": "餐饮"},
     {"keywords": ["溢香源"], "category": "餐饮"},
     {"keywords": ["石膳家"], "category": "餐饮"},
+    {"keywords": ["川流不息"], "category": "餐饮"},
+    {"keywords": ["肥田仔"], "category": "餐饮"},
     {"keywords": ["大米先生"], "category": "餐饮"},
     {"keywords": ["老乡鸡"], "category": "餐饮"},
     {"keywords": ["杨国福"], "category": "餐饮"},
+    {"keywords": ["酷味乐"], "category": "餐饮"},
+    {"keywords": ["LAWSON"], "category": "餐饮"},
     {"keywords": ["慕名沙龙"], "category": "服务"},
     {"keywords": ["顺丰速运"], "category": "服务"},
+    {"keywords": ["喜欢作者"], "category": "文体娱"},
+    {"keywords": ["医院"], "category": "医疗"},
     # 可以根据需要添加更多规则
 ]
 
 # 自定义的用于确定类别的子函数
-def determine_category(detail):
+def determine_category(detail, cost):
+    if "餐" in detail and float(cost) < 100:
+        return "餐饮"
+    if "大众点评" in detail and float(cost) < 100:
+        return "餐饮"
     for rule in match_rules:
         if any(keyword in detail for keyword in rule["keywords"]):
             return rule["category"]
@@ -74,7 +87,7 @@ expenses = []
 for data in data_array:
 
     detail = f"{data[1]} {data[2]}"
-    category = determine_category(detail)
+    category = determine_category(detail,data[3])
 
     expense = {
         "uuid": generate_uuid(),
